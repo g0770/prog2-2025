@@ -1,0 +1,4 @@
+
+Promedio Frecuencia Cardiaca: 91.25
+Mayor Frecuencia Cardiaca: 105
+Promedio de mayores a 31 Frecuencia Maxima Cardiaca:86.66666666666667

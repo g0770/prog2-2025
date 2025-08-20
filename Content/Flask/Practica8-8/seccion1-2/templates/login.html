@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form method="POST" onsubmit='changeText(event, {{accounts}})'>
+    <label for="usuario">UsuarioAAAA: </label> <input type="text" name="usuario" id="usuario">
+    <label for="contraseña">Contraseña: </label> <input type="password" name="contrasena" id="contrasena">
+    <input type="submit">
+  </form>
+  <p style="color: crimson;" id="msg"></p>
+
+  <script>
+    function changeText(event, accounts) {
+      event.preventDefault();
+
+      console.log(accounts)
+
+      const usuario = document.getElementById("usuario").value.trim();
+      const contrasena = document.getElementById("contrasena").value.trim();
+
+      let found = false
+
+      for (let acc of accounts) {
+        if (usuario === acc["usuario"] && contrasena === acc["contrasena"]) {
+          found = true;
+          break;
+        }
+      }
+      const msg = document.getElementById("msg");
+
+      if (found) {
+        msg.textContent = "ACCOUNT FOUND";
+        event.target.submit()
+      } else {
+        msg.textContent = "ACCOUNT NOT FOUND";
+      }
+    }
+  </script>
+</body>
+
+</html>
