@@ -8,40 +8,16 @@
 </head>
 
 <body>
-  <form method="POST" onsubmit='changeText(event, {{accounts}})'>
-    <label for="usuario">UsuarioAAAA: </label> <input type="text" name="usuario" id="usuario">
+  <form method="POST" onsubmit=''>
+    <label for="usuario">Usuario: </label> <input type="text" name="usuario" id="usuario">
     <label for="contraseña">Contraseña: </label> <input type="password" name="contrasena" id="contrasena">
     <input type="submit">
   </form>
+  {% if not success %}
+  <p style="color: crimson;" id="msg">ACCESO DENEGADO</p>
+  {% else %}
   <p style="color: crimson;" id="msg"></p>
-
-  <script>
-    function changeText(event, accounts) {
-      event.preventDefault();
-
-      console.log(accounts)
-
-      const usuario = document.getElementById("usuario").value.trim();
-      const contrasena = document.getElementById("contrasena").value.trim();
-
-      let found = false
-
-      for (let acc of accounts) {
-        if (usuario === acc["usuario"] && contrasena === acc["contrasena"]) {
-          found = true;
-          break;
-        }
-      }
-      const msg = document.getElementById("msg");
-
-      if (found) {
-        msg.textContent = "ACCOUNT FOUND";
-        event.target.submit()
-      } else {
-        msg.textContent = "ACCOUNT NOT FOUND";
-      }
-    }
-  </script>
+  {% endif %}
 </body>
 
 </html>

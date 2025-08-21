@@ -75,14 +75,33 @@ def welcome():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+  
   accounts = [{"usuario" : "admin", "contrasena" : "123"}, {"usuario" : "juan", "contrasena" : "newells"}]
+  success = True
+  
   if request.method == "POST":
-    usuario = request.form["usuario"]
-    return render_template("loginSuccess.html", usuario = usuario)
+    try:
+      usuario = request.form["usuario"]
+      contrasena = request.form["contrasena"]
+      for i in accounts:
+        if i["usuario"] == usuario and i["contrasena"] == contrasena:
+          break
+        success = False
+    except Exception as e:
+      print(e)
+    if success:
+      return render_template("loginSuccess.html", usuario = usuario)
+    else:
+      return render_template("login.html", success = success)
+    
   elif request.method == "GET":
-    return render_template("login.html", accounts = accounts)
+    return render_template("login.html", success = success)
+  
   else:
     raise Exception(f"METODO NO SOPORTADO: {request.method}")
+
+#todo buscar la manera de que en el html pueda tirar la funcion de una cuanto termine de cargar
+#todo buscar la manera de que "success" cambie DONE MAYBE
 
 #seccion 3
 '''Sección 3: Bucles en Jinja2
@@ -118,4 +137,4 @@ pass
 
 
 if __name__ == "__main__":
-  app.run(debug=False)
+  app.run(debug=True)
