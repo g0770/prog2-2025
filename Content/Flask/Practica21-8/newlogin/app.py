@@ -57,7 +57,11 @@ def login():
 
 @app.route("/home")
 def home():
-  return render_template("home.html", username = session["username"])
+  try:
+    return render_template("home.html", username = session["username"])
+  except Exception as e:
+    print(e)
+    return redirect(url_for("login"))
 
 if __name__ == "__main__":
   app.run(debug=True)
