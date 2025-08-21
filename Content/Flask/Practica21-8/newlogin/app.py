@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, flash, session
+from flask import Flask, request, render_template, redirect, url_for, session
 from models.user import db, User
 
 app = Flask(__name__)
@@ -34,31 +34,23 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-  
-  accounts = [{"username" : "admin", "password" : "123"}, {"username" : "juan", "password" : "newells"}]
   success = True
-  
   if request.method == "POST":
     try:
       username = request.form["username"]
       password = request.form["password"]
-      for i in accounts:
-        if i["username"] == username and i["password"] == password:
-          session["username"] = username
-          session["password"] = password
-          break
+      user = User.query.filter_by(username=username,password=password).first()
+      if not user:
         success = False
+        return redirect(url_for("login")) #automaticamente es get xq es codigo metodo 303
+      else:
+        session["username"] = user.username
+        session["password"] = user.password
+        return redirect(url_for("home"))
     except Exception as e:
-      print(e)
-      
-    if not success:
-      return redirect(url_for("login")) #automaticamente es get xq es codigo metodo 303
-    else:
-      return redirect(url_for("home"))
-    
+      print(e)    
   elif request.method == "GET":
-    return render_template("login.html", success = success)
-  
+    return render_template("login.html", success = success)  
   else:
     raise Exception(f"METODO NO SOPORTADO: {request.method}")
   
