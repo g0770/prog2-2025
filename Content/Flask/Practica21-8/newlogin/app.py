@@ -53,7 +53,42 @@ def login():
     return render_template("login.html", success = success)  
   else:
     raise Exception(f"METODO NO SOPORTADO: {request.method}")
-  
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+  if request.method == "POST":
+    try:
+      username = request.form["username"]
+      password1 = request.form["password1"]
+      password2 = request.form["password2"]
+      
+      if password1 != password2:
+        raise Exception("las contraseñas no son iguales")
+      
+      user = User.query.filter_by(username=username).first()
+      if user:
+        raise Exception("ese usuario ya existe")
+      
+      newUser = User(username = username, password = password1)
+      newUser.guardaPassword(password1)
+      
+      db.session.add(newUser)
+      db.session.commit()
+      
+      if not user:
+        session["username"] = newUser.username
+        session["password"] = newUser.password
+        return redirect(url_for("home"))
+      else:
+        return redirect(url_for("register")) #automaticamente es get xq es codigo metodo 303
+    except Exception as e:
+      print(e)   
+      return redirect(url_for("register")) 
+  elif request.method == "GET":
+    return render_template("register.html")  
+  else:
+    raise Exception(f"METODO NO SOPORTADO: {request.method}")
+
 
 @app.route("/home")
 def home():
