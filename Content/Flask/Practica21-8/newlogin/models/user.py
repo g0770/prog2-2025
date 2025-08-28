@@ -17,4 +17,4 @@ class User(db.Model):
     self.password = generate_password_hash(password)
     
   def comparaPassword(self ,password):
-    check_password_hash(self.password  , password)
+    return check_password_hash(self.password  , password)

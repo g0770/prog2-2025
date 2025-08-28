@@ -39,8 +39,11 @@ def login():
     try:
       username = request.form["username"]
       password = request.form["password"]
-      user = User.query.filter_by(username=username,password=password).first()
-      if not user:
+      
+      user = User.query.filter_by(username=username).first()
+      correctPwd = user.comparaPassword(password)
+      
+      if not user or not correctPwd :
         success = False
         return redirect(url_for("login")) #automaticamente es get xq es codigo metodo 303
       else:
@@ -50,7 +53,7 @@ def login():
     except Exception as e:
       print(e)    
   elif request.method == "GET":
-    return render_template("login.html", success = success)  
+    return render_template("login.html")  
   else:
     raise Exception(f"METODO NO SOPORTADO: {request.method}")
 
@@ -94,6 +97,16 @@ def register():
 def home():
   try:
     return render_template("home.html", username = session["username"])
+  except Exception as e:
+    print(e)
+    return redirect(url_for("login"))
+  
+  
+@app.route("/listUsers")
+def listUsers():
+  try:
+    users = User.query.all()
+    return render_template("listUsers.html", users = users)
   except Exception as e:
     print(e)
     return redirect(url_for("login"))
